@@ -93,6 +93,7 @@ lalamo/modules/token_mixers/state/short_conv_state.py
 lalamo/speculator/__init__.py
 lalamo/speculator/common.py
 lalamo/speculator/estimator.py
+lalamo/speculator/gumbel_main.py
 lalamo/speculator/inference.py
 lalamo/speculator/ngram.py
 lalamo/speculator/utils.py

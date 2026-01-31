@@ -97,35 +97,38 @@ class GumbelSpeculator(Speculator):
             array("f", repeat(-1e9, top_k)),
         )
 
-    def train(self, token_logits: Iterable[dict[int, float]], rng_key: Optional[jax.Array] = None) -> None:
+    def train(
+        self, 
+        token_ids: Iterable[int], 
+        token_logits: Iterable[dict[int, float]], 
+        rng_key: Optional[jax.Array] = None
+    ) -> None:
         """
-        Updates the global speculator state with a sequence of observations.
-        
-        :param token_logits: Iterable of dicts {token_id: logit_value}
-        :param rng_key: JAX PRNG Key for Gumbel noise generation.
+        Updates the global speculator state.
+        Arguments matches utils.train_speculator signature.
         """
+        # Если ключ не передан явно, используем внутренний
         if rng_key is None:
-            rng_key = jax.random.PRNGKey(42)
+            rng_key = self._rng_key
 
-        # Reconstruct current state from flat arrays
-        # Filter out initialization garbage (-1e9)
+        # Reconstruct current state
         old_scores = {}
         for k, v in zip(self._keys, self._values, strict=True):
             if v > -1e8: 
                 old_scores[k] = v
 
-        # Iterate over every observation in the batch/sequence
+        # Iterate over batch
         for cur_logits in token_logits:
             rng_key, step_key = jax.random.split(rng_key)
-            
-            # Update state using Max-Coupling
             old_scores = update_gumbels_coupling(old_scores, cur_logits, step_key, self.top_k)
 
-        # Write final state back to the arrays
+        # Сохраняем обновленный ключ обратно в класс, чтобы следующая серия была случайной
+        self._rng_key = rng_key
+
+        # Write final state back
         sorted_keys = list(old_scores.keys())
         sorted_vals = list(old_scores.values())
         
-        # Pad with dummies if we haven't seen K unique tokens yet
         while len(sorted_keys) < self.top_k:
             sorted_keys.append(0)
             sorted_vals.append(-1e9)
