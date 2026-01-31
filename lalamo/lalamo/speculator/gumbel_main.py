@@ -1,7 +1,7 @@
 import struct
 from array import array
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from itertools import repeat
 from typing import Self, Optional
 
@@ -69,7 +69,7 @@ def update_gumbels_coupling(
     return dict(top_k_items)
 
 
-@dataclass(frozen=True, eq=False)
+@dataclass(frozen=False, eq=False)
 class GumbelSpeculator(Speculator):
     """
     A Context-Free (Unigram) Speculator using Gumbel-Max Coupling.
@@ -82,6 +82,8 @@ class GumbelSpeculator(Speculator):
     _keys: array[int]
     _values: array[float]
 
+
+    _rng_key: jax.Array = field(default_factory=lambda: jax.random.PRNGKey(42))
     def __post_init__(self) -> None:
         if not self.top_k > 0:
             raise ValueError(f"{self.top_k=} (must be > 0)")
