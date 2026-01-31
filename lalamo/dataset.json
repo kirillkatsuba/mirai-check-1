@@ -1,0 +1,48 @@
+[
+  [
+    {
+      "role": "system",
+      "content": "You are Qwen, a helpful and concise AI assistant."
+    },
+    {
+      "role": "user",
+      "content": "Hello! Can you tell me a fun fact about space?"
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "I have 3 apples. I eat 2 and buy 5 more. How many apples do I have now? Think step by step."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What is the capital of France?"
+    },
+    {
+      "role": "assistant",
+      "content": "The capital of France is Paris."
+    },
+    {
+      "role": "user",
+      "content": "What are the top 3 tourist attractions there?"
+    }
+  ],
+  [
+    {
+      "role": "system",
+      "content": "You are a creative writer."
+    },
+    {
+      "role": "user",
+      "content": "Write a short poem about a robot learning to love."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain the difference between TCP and UDP protocols in simple terms."
+    }
+  ]
+]
